@@ -16,10 +16,6 @@
     <style>
         /*  글씨체  */
         .mypostingbox {
-
-            /* 삭제 */
-            background-color: pink;
-
             width: 500px;
             margin: 100px auto auto 100px;
 
@@ -28,7 +24,6 @@
             border-radius: 5px;
         }
 
-        /* 삭제 */
         .text-bg-dark {
             background-color: green;
         }
@@ -43,19 +38,23 @@
             grid-template-columns: repeat(3, minmax(auto, 1fr));
             align-items: center;
             justify-content: space-around;
-            
+
         }
 
         .mypostingbox>button {
             width: 100%;
         }
 
-        #card { 
-            margin: 20px 10px 10px 100px ;
-
+        #card {
+            width: 300px;
+            margin: 20px 30px 10px 10px;
+            background-color: aqua;
         }
 
-
+        .image_size {
+            width: 300px;
+            height: 100px;
+        }
     </style>
 
     <script>
@@ -124,7 +123,7 @@
 
         <!-- grid 2번째 줄 -->
         <div class="card mb-3" style="max-width: 570px; border-color: transparent;">
-            <div id="card" class="" >
+            <div id="card" class="">
                 <div class="row g-0" id="addimage">
                     <div class="col-md-4" style="background-color: yellow;">
                         <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
@@ -133,7 +132,6 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">김재현</h5>
-                            <p></p>
                             <p class="card-text">방명록을 작성해보자.</p>
                             <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
                         </div>
@@ -244,7 +242,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div id="card" class="">
+            </div>
+            <div id="card" class="">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="https://mblogthumb-phinf.pstatic.net/MjAxODA1MTJfMjc0/MDAxNTI2MTI0MjMxMzIx.L1Zu4NdqNGmx9UxgZ6jtMv2aOSERxmbQ34Ec6Q1Mqlgg.X6Wb-bFNKowLgOxfIZpqjKZfd7BcXc1zavCtOdqqdycg.JPEG.movie_dream/%EC%95%88%EB%84%A4%EC%9D%98%EC%9D%BC%EA%B8%B0.jpg?type=w800"
@@ -259,7 +258,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            <div id="card" class="">
+            </div>
+            <div id="card" class="">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="https://mblogthumb-phinf.pstatic.net/MjAxODA1MTJfMjc0/MDAxNTI2MTI0MjMxMzIx.L1Zu4NdqNGmx9UxgZ6jtMv2aOSERxmbQ34Ec6Q1Mqlgg.X6Wb-bFNKowLgOxfIZpqjKZfd7BcXc1zavCtOdqqdycg.JPEG.movie_dream/%EC%95%88%EB%84%A4%EC%9D%98%EC%9D%BC%EA%B8%B0.jpg?type=w800"
