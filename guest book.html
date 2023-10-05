@@ -40,28 +40,152 @@
         #card {
             width: 300px;
             margin: 20px 30px 10px 10px;
-            background-color: aqua;
+
+            border: 1px solid black;
         }
 
+        /* 삭제 */
         .text-bg-dark {
             background-color: green;
         }
+
+        /* 삭제 */
 
 
         .mypostingbox>button {
             width: 100%;
         }
 
+        .cardlink {
+            text-decoration-line: none;
+            color: inherit;
+        }
 
-
-        .image_size {
-            width: 300px;
-            height: 100px;
+        .addimage {
+            width: 100%;
+            height: 100%;
         }
     </style>
 
-    <script>
+    <script type="module">
 
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+
+        // Firebase 구성 정보 설정
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYK3xMsjQOT_Z1-Yf1tMTz6QtNzEejeQ4",
+            authDomain: "seven-14b85.firebaseapp.com",
+            projectId: "seven-14b85",
+            storageBucket: "seven-14b85.appspot.com",
+            messagingSenderId: "634437354299",
+            appId: "1:634437354299:web:054de790893f9f115a6d1e",
+            measurementId: "G-R52L74D772"
+        };
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+
+        //날짜 불러오기 및 변수 저장
+        var now = new Date();
+        var year = now.getFullYear();	// 연도
+        var month = now.getMonth();	// 월
+        var date = now.getDate();	// 일
+        var hours = now.getHours();	// 시간
+        var minute = now.getMinutes();	// 분
+
+        // 날짜 원하는 형식 맞추기 (yyyy-mm-dd 형식)
+        month = month >= 10 ? month : "0" + month; //month 두자리로 출력
+        date = date >= 10 ? date : "0" + date; //day 두자리로 출력
+
+        // 시간 원하는 형식 맞추기 (hh:mm 형식)
+        hours = hours >= 10 ? hours : "0" + hours; //hour 두자리로 출력
+        minute = minute >= 10 ? minute : "0" + minute; //minute 두자리로 출력
+
+        //데이터 넣기
+        $("#savebtn").click(async function () {
+
+            let image = $('#image').val();
+            let name = $('#name').val();
+            let comment = $('#comment').val();
+            let blog = $('#blog').val();
+            let password = $('#password').val();
+            let time = `${year}-${month}-${date}  ${hours}:${minute}`;
+
+            let doc = {
+                'image': image,
+                'name': name,
+                'comment': comment,
+                'blog': blog,
+                'time': time,
+                'password': password
+            };
+
+            await addDoc(collection(db, "guest book"), doc)
+
+            alert('저장 완료!')
+
+            window.location.reload();
+        })
+
+
+
+        let i = 0;    //이거 왜 문서 삭제하면 삭제한만큼 줄어들음??? 이게 왜 되?
+
+        //데이터 읽기
+        let docs = await getDocs(collection(db, "guest book"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+            console.log(row);                      //콘솔 창에서 어떤 데이터를 어떻게 가져오는지 확인 가능
+
+            let image = row['image'];
+            let name = row['name'];
+            let comment = row['comment'];
+            let blog = row['blog'];
+            let time = row['time'];
+
+            let temp_html = `
+            <div id="card" class="">
+                <a href="${blog}" class="cardlink">
+                    <div class="row g-0" id="">
+                        <div class="col-md-4">
+                            <img src="${image}"
+                                class="addimage"
+                                onerror="this.src='https:velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png'">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">${name}</h5>
+                                <p class="card-text">${comment}</p>
+                                <p class="card-time">${time}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            `;
+
+            //카드 왼쪽오른쪽 번갈아 나오게
+            if (i % 2 == 0) {
+                $('.card1').append(temp_html);
+                i++;
+            }
+            else {
+                $('.card2').append(temp_html);
+                i++;
+            }
+
+
+        });
+        console.log("i값 현재:" + i);
+        //이거 왜 문서 삭제하면 삭제한만큼 줄어들음??? 이게 왜 되?
 
     </script>
 
@@ -79,7 +203,7 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#홈으로 가는 링크" class="nav-link px-2 text-black-50 "><span id="seven">Seven</span></a></li>
+                    <li><a href="#홈으로 가는 링크" class="nav-link px-2 text-black-50"><span id="seven">Seven</span></a></li>
                     <li><a href="#" class="nav-link px-2 text-black-50">방명록</a></li>
 
                 </ul>
@@ -91,171 +215,83 @@
     <div id="whole">
         <div class="mypostingbox" id="postingbox">
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="image" placeholder="영화 이미지 주소">
+                <input type="email" class="form-control" id="image" placeholder="사진">
                 <label for="floatingInput">사진 url</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="title" placeholder="영화 제목">
+                <input type="email" class="form-control" id="name" placeholder="이름">
                 <label for="floatingInput">이름</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="title" placeholder="영화 제목">
+                <input type="email" class="form-control" id="comment" placeholder="인사말">
                 <label for="floatingInput">인사말, 의견</label>
             </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01">★</label>
-                <select class="form-select" id="star">
-                    <option selected>별점선택</option>
-                    <option value="⭐">⭐</option>
-                    <option value="⭐⭐">⭐⭐</option>
-                    <option value="⭐⭐⭐">⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐⭐⭐</option>
-                </select>
-            </div>
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="title" placeholder="블로그 url">
+                <input type="email" class="form-control" id="blog" placeholder="블로그 url">
                 <label for="floatingInput">블로그 url</label>
             </div>
+            <div class="form-floating mb-3" style="margin: auto; width: 50%;">
+                <input type="email" class="form-control" id="password" placeholder="비밀번호" style=" height: 50px;">
+                <label for="floatingInput" style="margin: auto auto 100px auto;">비밀번호를 입력해주세요</label>
+            </div>
 
-            <button id="postingbtn" type="button" class="btn btn-outline-dark">저장!</button>
+            <button id="savebtn" type="button" class="btn btn-outline-dark">저장!</button>
 
         </div>
 
         <!-- grid 2번째 줄 -->
-        <div class="card mb-3" style="max-width: 570px; border-color: transparent;">
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
+        <div class="card1 mb-3" style="max-width: 570px; border-color: transparent;">
+
+            <div id="card" class="cardform">
+                <a class="cardlink">
+                    <div class="row g-0" id="">
+                        <div class="col-md-4">
+                            <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
+                                class="addimage"
+                                onerror="this.src='https:velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png'">
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="card-body">
+                                <h5 class="card-title">홍길동</h5> 
+                                <button style="background-color: yellow; border: transparent; position: relative; top: 10px; left: 10px;"
+                                    onclick="">
+                                    <img src="C:\Users\wogus\Downloads\휴지통.png"
+                                        style="height: 15px; width: 15px; background-color: red;" alt="대체 텍스트"
+                                        onclick="">
+                                </button>
+                                <p class="card-text">방명록을 작성해보자.</p>
+                                <p class="card-time">2023-10-05 11:41</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
+                </a>
             </div>
 
-
-
-
-            <!-- 1. 여기에 한번 추가 번갈아서-->
         </div>
 
         <!--grid 3번째 줄 -->
-        <div class="card mb-3" style="max-width: 570px;border-color: transparent;">
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
+        <div class="card2 mb-3" style="max-width: 570px;border-color: transparent;">
+
+            <!-- <div id="card" class="cardform">
+                <a href="https://app.gather.town/app/wryCH8av39m3pMwq/nbcamp_9_spring" class="cardlink">
+                    <div class="row g-0" id="">
+                        <div class="col-md-4">
+                            <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
+                                class="addimage"
+                                onerror="this.src='https:velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png'">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">홍길동</h5>
+                                <p class="card-text">방명록을 작성해보자.</p>
+                                <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐⭐⭐</small></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="card" class="">
-                <div class="row g-0" id="addimage">
-                    <div class="col-md-4">
-                        <img src="https://velog.velcdn.com/images/jeiho/profile/f8ca936e-20b4-477e-b863-9f4c3f58b5eb/social_profile.png"
-                            class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">김재현</h5>
-                            <p class="card-text">방명록을 작성해보자.</p>
-                            <p class="card-text"><small class="text-body-secondary">⭐⭐⭐⭐⭐</small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 2. 여기에 한번 추가 번갈아서 -->
+                </a>
+            </div> -->
+
         </div>
 
     </div>
