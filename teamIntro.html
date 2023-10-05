@@ -13,6 +13,16 @@
             font-family: 'Inter', sans-serif;
         }
 
+        #t a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        #t a:hover {
+            color: hsl(334, 100%, 50%);
+        }
+
         .seven {
             font-size: 60px;
             font-weight: 900;
@@ -65,7 +75,7 @@
         }
 
         .col {
-            width: 300px;
+            width: 400px;
             height: 300px;
             margin: 0px 200px 0px 60px;
             padding: 45px auto 0px auto;
@@ -74,11 +84,12 @@
             font-weight: 100;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 </head>
 
 <body>
     <div class="main">
-        <h1 class="seven">SEVEN</h1>
+        <h1 id="t" class="seven"><a href="./home.html">SEVEN</a></h1>
         <br>
         <h3>팀 소개</h3>
         <p>
